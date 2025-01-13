@@ -1,0 +1,67 @@
+The standard Stochastic Gradient Descent update rule states:
+θt+1 ← θt − α∇(θt)Jminibatch(θt)
+where t + 1 is the current timestep, θ is a vector containing all of the model parameters, (θt is the model
+parameter at time step t, and θt+1 is the model parameter at time step t + 1), J is the loss function,
+∇θJminibatch(θ) is the gradient of the loss function with respect to the parameters on a minibatch of data,
+and α is the learning rate. Adam Optimization uses a more sophisticated update rule with two additional
+steps.
+
+First, Adam uses a trick called momentum by keeping track of m, a rolling average of the
+gradients:
+mt+1 ← β1mt + (1 − β1)∇(θt)Jminibatch(θt)
+θt+1 ← θt − αmt+1
+where β1 is a hyperparameter between 0 and 1 (often set to 0.9). Briefly explain in 2–4 sentences (you
+don’t need to prove mathematically, just give an intuition) how using m stops the updates from varying
+as much and why this low variance may be helpful to learning, overall.
+
+Adam extends the idea of momentum with the trick of adaptive learning rates by keeping track of v, a rolling average of the magnitudes of the gradients:
+mt+1 ← β1mt + (1 − β1)∇θt Jminibatch(θt)
+vt+1 ← β2vt + (1 − β2)(∇θt Jminibatch(θt) ⊙ ∇θt Jminibatch(θt))
+θt+1 ← θt − αmt+1/√vt+1
+where ⊙ and / denote elementwise multiplication and division (so z ⊙ z is elementwise squaring) and β2 is a hyperparameter between 0 and 1 (often set to 0.99). Since Adam divides the update by √v, which of the model parameters will get larger updates? Why might this help with learning?
+
+
+
+b)
+i. The momentum term, represented by the rolling average of gradients (m), in the Adam optimization algorithm helps to reduce the variation in updates during training. By incorporating the momentum, the updates become more stable and less sensitive to fluctuations in the gradient values. This low variance in updates can be beneficial for learning because it allows the algorithm to move more smoothly in the parameter space, avoiding large oscillations or overshooting that may hinder convergence. The momentum term effectively adds inertia to the optimization process, enabling more consistent progress towards the optimal solution.
+
+ii. In the Adam optimization algorithm, the updates are divided by the square root of the rolling average of the magnitudes of the gradients (v). This means that model parameters with larger magnitudes of gradients will receive larger updates. This can be beneficial for learning because it allows the algorithm to prioritize updates for parameters that have a larger impact on the loss function. By giving larger updates to these parameters, Adam can effectively converge faster towards the optimal solution by navigating the parameter space more efficiently. This adaptive learning rate scheme helps to address the challenge of different gradients having varying scales, allowing for more effective updates across different parameter dimensions.
+
+c)
+i. Dropout is applied during training to prevent overfitting and improve the generalization ability of the model. By randomly setting units in the hidden layer to zero, dropout introduces noise and forces the model to rely on different subsets of features during each training iteration. This helps to reduce the co-adaptation of neurons and encourages the model to learn more robust and generalized representations of the data.
+
+ii. Dropout should not be applied during evaluation or testing because it introduces randomness and modifies the expected behavior of the model. During evaluation, we want the model to make consistent and deterministic predictions based on the learned parameters. Applying dropout would introduce randomness that is not representative of the true behavior of the model. Therefore, dropout is typically turned off during evaluation to obtain reliable and consistent predictions.
+
+
+(e) Our network will predict which transition should be applied next to a partial parse. We could use it to parse a single sentence by applying predicted transitions until the parse is complete. However, neural networks run much more efficiently when making predictions about batches of data at a time (i.e., predicting the next transition for any different partial parses simultaneously). We can parse sentences in minibatches with the following algorithm:
+
+----------------------------------------
+Algorithm 1 Minibatch Dependency Parsing
+----------------------------------------
+Input: sentences, a list of sentences to be parsed and model, our model that makes parse decisions
+Initialize partial parses as a list of PartialParses, one for each sentence in sentences
+Initialize unfinished parses as a shallow copy of partial parses
+while unfinished parses is not empty do
+Take the first batch size parses in unfinished parses as a minibatch
+Use the model to predict the next transition for each partial parse in the minibatch
+Perform a parse step on each partial parse in the minibatch with its predicted transition
+Remove the completed (empty buffer and stack of size 1) parses from unfinished parses
+end while
+Return: The dependencies for each (now completed) parse in partial parses.
+----------------------------------------
+
+Implement this algorithm in the minibatch parse function in parser transitions.py. You can run basic (non-exhaustive) tests by running python parser transitions.py part d.
+
+
+
+
+Garden-path sentences, like "The horse raced past the barn fell," can pose significant problems for a dependency parser due to their initial syntactic ambiguity. They lead the reader (or, in our case, the parser) down a 'garden path' to an unexpected grammatical structure, which often necessitates a reevaluation of the parsed sentence structure.
+
+In this sentence, the issue stems from the phrase "raced past the barn," which seems to be a complete and grammatical thought with 'horse' as the subject and 'raced' as the verb. This is known as a "reduced relative clause," where 'that was' is omitted from the sentence, and the correct interpretation should be "The horse (that was) raced past the barn fell."
+
+When initially parsed, the parser might incorrectly attach 'raced' as the main verb of the sentence, with 'horse' as its subject, since this is a common pattern. This will result in a problem when the parser reaches 'fell' and tries to incorporate it into the structure because 'horse' already has a verb, 'raced'.
+
+However, if the parser correctly identifies 'raced' as part of the reduced relative clause, it can correctly parse the sentence. 'Raced past the barn' modifies 'horse,' and 'fell' is the main verb with 'horse' as the subject.
+
+To correctly parse such sentences, the parser must be able to handle this type of syntactic ambiguity, ideally by learning from a corpus that includes plenty of reduced relative clauses. However, these sentences are comparatively rare, which may cause the parser to struggle with them if it has been trained mainly on more 'typical' sentences. Furthermore, handling such ambiguity can also be computationally challenging, particularly in cases where the parser is designed to make decisions greedily or without backtracking.
+

@@ -1,0 +1,48 @@
+More generally, here are four types of parsing error:
+• Prepositional Phrase Attachment Error: In the example above, the phrase into Afghanistan is a
+prepositional phrase6
+. A Prepositional Phrase Attachment Error is when a prepositional phrase is attached to the wrong head word (in this example, troops is the wrong head word and sent is the correct
+head word). More examples of prepositional phrases include with a rock, before midnight and under the
+carpet.
+• Verb Phrase Attachment Error: In the sentence Leaving the store unattended, I went outside to watch
+the parade, the phrase leaving the store unattended is a verb phrase7
+. A Verb Phrase Attachment Error
+is when a verb phrase is attached to the wrong head word (in this example, the correct head word is
+went).
+• Modifier Attachment Error: In the sentence I am extremely short, the adverb extremely is a modifier
+of the adjective short. A Modifier Attachment Error is when a modifier is attached to the wrong head
+word (in this example, the correct head word is short).
+• Coordination Attachment Error: In the sentence Would you like brown rice or garlic naan?, the
+phrases brown rice and garlic naan are both conjuncts and the word or is the coordinating conjunction.
+The second conjunct (here garlic naan) should be attached to the first conjunct (here brown rice). A
+Coordination Attachment Error is when the second conjunct is attached to the wrong head word (in
+this example, the correct head word is rice). Other coordinating conjunctions include and, but and so.
+
+
+
+
+
+
+
+
+Moscow sent troops into Afghanistan. The phrase into Afghanistan is a prepositional phrase. A Prepositional Phrase Attachment Error is when a prepositional phrase is attached to the wrong head word (in this example, sent is the correct head word and any other such as troops is a wrong head word to be attached).
+carpet.
+
+\item \textbf{Moscow sent troops into Afghanistan.} \textit{Prepositional Phrase Attachment Error}:
+\item \textbf{Leaving the store unattended, I went outside to watch the parade.} \textit{Verb Phrase Attachment Error}:
+\item \textbf{I am extremely short.} \textit{Modifier Attachment Error}:
+\item \textbf{Would you like brown rice or garlic naan?} \textit{Coordination Attachment Error}:
+
+
+	\item Moscú envió tropas a Afganistán.
+	\item Dejando la tienda sin atención, salí a ver el desfile.
+	\item Soy extremadamente bajo (or "baja" for a female speaker).
+	\item ¿Te gustaría arroz integral o naan de ajo?
+
+Spanish parsing can also present similar challenges to those of English. Lets go one by one on our use-cases:
+	\item Prepositional Phrase Attachment Error: In the sentence "Moscú envió tropas a Afganistán", the parser could have mistakenly attached "a Afganistán" to "tropas" instead of "envió". Nevertheless, the parser did not make any mistake with this sentence.
+	\item Verb Phrase Attachment Error: In "Dejando la tienda desatendida, salí a ver el desfile", the parser incorrectly attached "Dejando la tienda desatendida" to "ver" instead of "salí", just as it could happen in English.
+	\item Modifier Attachment Error: In "Soy extremadamente bajo", the parser could incorrectly attach "extremadamente" to "Soy" instead of "bajo", although it did not happen this time.
+	\item Coordination Attachment Error: In "¿Quieres arroz integral o naan de ajo?", a parser might incorrectly attach "naan de ajo" to "quieres" instead of "arroz integral". It did not happen this time, but on a previous run (i did not take a picture) the sentence was parsed wrongly (I swear).
+	
+Additional challenges in Spanish may arise due to varying word order compared to English and the use of pronominal words that are attached to the verb (e.g., "lo se", which means "I know it/that"). The use of reflexive and indirect object pronouns, which usually precede the verb, can add complexity for parsers. Furthermore, Spanish's extensive verb conjugation system to express tense, aspect, mood, and subject can make identifying the correct heads of certain relations azmore intricate task. For instance, in a language where the subject is usually explicitly stated as a separate word, parsers can sometimes rely on word order to identify the subject of a verb. But in Spanish, the subject is often implicit within the verb conjugation itself. This can complicate the parser's job, as it needs to infer the subject from the verb form, and it can lead to errors if the parser does not handle this feature of Spanish effectively.

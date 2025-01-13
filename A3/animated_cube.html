@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animated Cube</title>
+  <style>
+    body { margin: 0; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <canvas id="cubeCanvas"></canvas>
+  <script>
+
+    const canvas = document.getElementById('cubeCanvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const size = 100;
+
+    function drawCube(x, y, size, angle, color) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(angle);
+    ctx.translate(-size / 2, -size);
+
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(size, 0);
+    ctx.lineTo(size + size / 2, size / 2);
+    ctx.lineTo(size / 2, size / 2);
+    ctx.closePath();
+
+    ctx.moveTo(0, 0);
+    ctx.lineTo(-size / 2, size / 2);
+    ctx.lineTo(size / 2, size * 1.5);
+    ctx.lineTo(size, size);
+
+    ctx.moveTo(size / 2, size / 2);
+    ctx.lineTo(0, size);
+    ctx.lineTo(size, size);
+    ctx.lineTo(size + size / 2, size / 2);
+
+    ctx.fillStyle = color;
+    ctx.fill();
+
+    ctx.strokeStyle = 'black';
+    ctx.stroke();
+
+    ctx.restore();
+    }
+
+    let angle = 0;
+    let color = 'red';
+
+    function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+
+    angle += 0.01;
+
+    drawCube(centerX, centerY, size, angle, color);
+
+    requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    function changeColor() {
+    const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'];
+    color = colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    setInterval(changeColor, 5000);
+
+  </script>
+</body>
+</html>
